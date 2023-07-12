@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  ImageFeed
+//  ImageFeed/Users/ruslanbatalov/Documents/ImageFeed/ImageFeed/ProfileViewController/ProfilleViewController.swift
 //
 //  Created by Ruslan Batalov on 16.12.2022.
 //
@@ -12,6 +12,20 @@ class ImagesListViewController: UIViewController {
    
     
     @IBOutlet private var tableView: UITableView!
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowSingleImage" {
+            let viewController = segue.destination as! SingleImageViewController
+            let indexPath = sender as! IndexPath
+            let imageName = photosName[indexPath.row]
+            let image = UIImage(named: "\(imageName)_full_size") ?? UIImage(named: imageName)
+            viewController.image = image
+        } else {
+            super.prepare(for: segue, sender: sender)
+        }
+    }
+    
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -75,7 +89,13 @@ extension ImagesListViewController {
 }
 
 extension ImagesListViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {}
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        performSegue(withIdentifier: "ShowSingleImage", sender: indexPath)
+    }
+    
+    
+    
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let image = UIImage(named: photosName[indexPath.row]) else {
